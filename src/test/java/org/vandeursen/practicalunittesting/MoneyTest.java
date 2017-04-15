@@ -1,6 +1,5 @@
 package org.vandeursen.practicalunittesting;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -33,6 +32,7 @@ class MoneyTest {
     }
 
     // Multiple dynamic tests
+    // The long way round:
     @TestFactory
     public Collection<DynamicTest> multipleAmountTests() {
         List<Integer> amounts = new ArrayList<>(Arrays.asList(15,20,25,30));
@@ -48,6 +48,20 @@ class MoneyTest {
             dynamicTests.add(dTest);
         }
         return dynamicTests;
+    }
+
+
+    // Multiple dynamic tests
+    // The shortcut or Java 8 method:
+    @TestFactory
+    public Stream<DynamicTest> multipleAmountTestsStream() {
+        List<Integer> amounts = new ArrayList<>(Arrays.asList(15,20,25,30));
+
+        return amounts.stream().map(amount -> DynamicTest.dynamicTest("Test money amount " +
+                amount, () -> {
+            Money money = new Money(amount, "USD");
+            assertEquals((int)amount,money.getAmount());
+        }));
     }
 
 }
